@@ -101,6 +101,7 @@ public:
 
 	virtual void InitializeSequences(
 			std::map<string, vector<int> > taxa_names_to_sequences);
+	void InitializeAncestralSequence();
 	void InitializeOutputStreams();
 
 	virtual void SampleSubtreeParameters();

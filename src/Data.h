@@ -35,15 +35,10 @@ private:
 
 	void ReadSequences();
 
-	vector<int> EncodeSequenceAndReportGaps(string);
+	vector<int> EncodeSequence(string);
 	bool HasGap(string);
-	void ReportGapAtColumn(int column);
 	void AddStateToStates(string state);
 
-	void RemoveColumnsWithGapsFromSequences();
-	vector<int> RemoveGapsFromEncodedSequence(vector<int> encoded_sequence);
-
-	void DetermineColumnsWithoutGaps();
 	void PrintTaxaAndSequences();
 };
 

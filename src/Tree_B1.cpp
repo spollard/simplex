@@ -203,11 +203,11 @@ void Tree_B1::InitializeSequences(
 		right->InitializeSequences(taxa_names_to_sequences);
 
 		sequence.resize(left->sequence.size());
-		SampleSequence();
+		InitializeAncestralSequence();
 	} else if (IsSegment()) {
 		left->InitializeSequences(taxa_names_to_sequences);
 		sequence.resize(left->sequence.size());
-		SampleSequence();
+		sequence = left->sequence;
 	} else if (IsLeaf()) {
 		if (taxa_names_to_sequences.find(name)
 				== taxa_names_to_sequences.end()) {
@@ -218,7 +218,6 @@ void Tree_B1::InitializeSequences(
 		sequence = taxa_names_to_sequences[name];
 	}
 }
-
 
 void Tree_B1::SampleParameters() {
 //	std::cout << "Sampling tree parameters" << std::endl;

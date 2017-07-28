@@ -6,7 +6,7 @@
 
 extern Options options;
 
-static const int gap_indicator = -1;
+extern const int gap_indicator = -1;
 
 Data::Data() {
 //	cout << "Data constructor" << endl;
@@ -18,8 +18,6 @@ Data::~Data() {
 
 void Data::Initialize() {
 	ReadSequences();
-	DetermineColumnsWithoutGaps();
-	RemoveColumnsWithGapsFromSequences();
 }
 
 /// This function is too long.
@@ -49,7 +47,7 @@ void Data::ReadSequences() {
 
 		if (line.at(0) == '>') {
 			if (sequence != "") {
-				taxa_names_to_sequences[name] = EncodeSequenceAndReportGaps(
+				taxa_names_to_sequences[name] = EncodeSequence(
 						sequence);
 			}
 			name = line.substr(1);
@@ -59,16 +57,15 @@ void Data::ReadSequences() {
 		}
 	}
 // Add final sequence
-	taxa_names_to_sequences[name] = EncodeSequenceAndReportGaps(sequence);
+	taxa_names_to_sequences[name] = EncodeSequence(sequence);
 }
 
-vector<int> Data::EncodeSequenceAndReportGaps(string sequence) {
+vector<int> Data::EncodeSequence(string sequence) {
 	vector<int> encoded_sequence(sequence.length());
 
 	for (int site = 0; site < sequence.length(); site++) {
 		string state = sequence.substr(site, 1);
 		if (HasGap(state)) {
-			ReportGapAtColumn(site);
 			encoded_sequence.at(site) = gap_indicator;
 		} else {
 			AddStateToStates(state);
@@ -84,10 +81,6 @@ bool Data::HasGap(string sequence) {
 			or sequence.find('?') != string::npos);
 }
 
-void Data::ReportGapAtColumn(int column) {
-	columns_with_gaps.insert(column);
-}
-
 void Data::AddStateToStates(string state) {
 	if (state_to_integer.find(state) == state_to_integer.end()) {
 		int encoded_state = state_to_integer.size();
@@ -95,43 +88,6 @@ void Data::AddStateToStates(string state) {
 
 		states.push_back(state);
 	}
-}
-
-void Data::DetermineColumnsWithoutGaps() {
-	int number_of_sites = taxa_names_to_sequences.begin()->second.size();
-	cout << "Number of columns in alignment: " << number_of_sites << endl;
-
-	for (int site = 0; site < number_of_sites; site++) {
-		// If site is not in columns with gaps
-		if (columns_with_gaps.find(site) == columns_with_gaps.end()) {
-			columns_without_gaps.push_back(site);
-		}
-	}
-
-	cout << "Number of columns without gaps: "
-			<< columns_without_gaps.size() << endl;
-}
-
-void Data::RemoveColumnsWithGapsFromSequences() {
-	if (options.debug)
-		cout << "Removing gaps" << endl;
-
-	for (std::map<string, vector<int> >::iterator it =
-			taxa_names_to_sequences.begin();
-			it != taxa_names_to_sequences.end(); it++) {
-		vector<int> encoded_sequence = it->second;
-		it->second = RemoveGapsFromEncodedSequence(encoded_sequence);
-	}
-}
-
-vector<int> Data::RemoveGapsFromEncodedSequence(vector<int> encoded_sequence) {
-	vector<int> encoded_sequence_without_gaps(columns_without_gaps.size());
-
-	for (int site = 0; site < columns_without_gaps.size(); site++) {
-		encoded_sequence_without_gaps.at(site) = encoded_sequence.at(
-				columns_without_gaps.at(site));
-	}
-	return encoded_sequence_without_gaps;
 }
 
 void Data::PrintTaxaAndSequences() {

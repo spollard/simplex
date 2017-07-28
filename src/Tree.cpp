@@ -9,6 +9,8 @@ extern double Random();
 
 extern Options options;
 
+extern const int gap_indicator;
+
 using namespace std;
 
 int Tree::number_of_trees = 0;
@@ -218,8 +220,7 @@ void Tree::InitializeSequences(
 		right->InitializeSequences(taxa_names_to_sequences);
 
 		sequence.resize(left->sequence.size());
-		SampleSequence();
-
+		InitializeAncestralSequence();
 	} else if (IsLeaf()) {
 		if (taxa_names_to_sequences.find(name)
 				== taxa_names_to_sequences.end()) {
@@ -267,6 +268,26 @@ void Tree::SampleSubtreeParameters() {
 void Tree::SampleSequence() {
 	if (not IsLeaf()) {
 		MetropolisHastingsStateSampling();
+	}
+}
+
+void Tree::InitializeAncestralSequence() {
+	for (int site = 0; site < sequence.size(); site++) {
+		if (Random() < 0.5) {
+			if (left->sequence.at(site) == gap_indicator) {
+				sequence.at(site) = right->sequence.at(site);
+			}
+			else {
+				sequence.at(site) = left->sequence.at(site);
+			}
+		} else {
+			if (right->sequence.at(site) == gap_indicator) {
+				sequence.at(site) = left->sequence.at(site);
+			}
+			else {
+				sequence.at(site) = right->sequence.at(site);
+			}
+		}
 	}
 }
 
@@ -404,7 +425,12 @@ void Tree::RecordSequence() {
 	sequences_out << ">" << name << endl;
 	
 	for (int site = 0; site < sequence.size(); site++) {
+		if (sequence.at(site) == gap_indicator) {
+			sequences_out << '-';
+		}
+		else {
 		sequences_out << states[sequence.at(site)];
+		}
 	}
 	sequences_out << endl;
 }
