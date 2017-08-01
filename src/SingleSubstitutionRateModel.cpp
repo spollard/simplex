@@ -13,7 +13,7 @@ int SingleSubstitutionRateModel::number_of_single_substitution_rate_models = 0;
 SingleSubstitutionRateModel::SingleSubstitutionRateModel() {
 	id = number_of_single_substitution_rate_models;
 	number_of_single_substitution_rate_models++;
-	substitution_rate = 0;
+	substitution_rate.value = 0;
 }
 
 SingleSubstitutionRateModel::~SingleSubstitutionRateModel() {
@@ -59,7 +59,7 @@ void SingleSubstitutionRateModel::InitializeStateFromFile(
 		exit(-1);
 	}
 
-	state_in >> substitution_rate;
+	state_in >> substitution_rate.value;
 }
 
 /**
@@ -71,22 +71,11 @@ void SingleSubstitutionRateModel::InitializeStateFromFile(
  */
 static double step_size = 0.1;
 void SingleSubstitutionRateModel::SampleParameters() {
-	if (not is_constant) {
-		if (substitution_rate == 0) {
-			substitution_rate = Random();
-		}
-		if (Random() < 0.5 and substitution_rate > step_size) {
-//			substitution_rate *= 9.0 / 10.0;
-			substitution_rate -= step_size;
-		} else {
-//			substitution_rate *= 10.0 / 9.0;
-			substitution_rate += step_size;
-		}
-	}
+	substitution_rate.sample();
 }
 
 void SingleSubstitutionRateModel::RecordState() {
-	*substitution_model_out << substitution_rate << std::endl;
+	*substitution_model_out << substitution_rate.value << std::endl;
 }
 
 double SingleSubstitutionRateModel::SubstitutionProbability(int ancestral_state,
@@ -94,9 +83,9 @@ double SingleSubstitutionRateModel::SubstitutionProbability(int ancestral_state,
 	double probability = 0;
 
 	if (ancestral_state != descendent_state)
-		probability = 1 - std::exp(-substitution_rate * branch_length);
+		probability = 1 - std::exp(-substitution_rate.value * branch_length);
 	else
-		probability = std::exp(-substitution_rate * branch_length);
+		probability = std::exp(-substitution_rate.value * branch_length);
 
 	return probability;
 }
