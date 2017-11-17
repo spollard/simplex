@@ -14,11 +14,20 @@
 #include "Model.h"
 #include "Data.h"
 #include "MCMC.h"
+#include "Main.h"
+
+#ifdef _WIN32
+#include <sys/time.h>
+#else
+#include <sys/times.h>
+#endif
 
 Options options;
 
 int main() {
-	SimPLEX::Initialize();
+	time_t start_time = time(NULL);
+
+	Main::Initialize();
 
 	Data data;
 	data.Initialize();
@@ -33,7 +42,7 @@ int main() {
 
 	// Now that I have objects allocated on the heap, this is required. Unless I use shared pointers...
 	model.Terminate();
-	SimPLEX::Terminate();
+	Main::Terminate(start_time);
 
 	return 0;
 }
