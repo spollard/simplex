@@ -13,9 +13,9 @@
 
 #include <vector>
 
-#include "Tree.h"
+#include "Trees/Tree.h"
 
-#include "SubstitutionModel.h"
+#include "SubstitutionModels/SubstitutionModel.h"
 
 class Model {
 public:

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cmath>
 
-#include "TreeTypes.h"
-#include "SubstitutionModelTypes.h"
+#include "Trees/TreeTypes.h"
+#include "SubstitutionModels/SubstitutionModelTypes.h"
 
 #include "Options.h"
 

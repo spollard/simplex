@@ -11,35 +11,16 @@
 #include <string>
 #include <cstdlib> // For rand
 #include "Options.h"
+#include "utils.h"
+
 extern Options options;
 
-//This is a global random function.
-double Random() { return (std::rand() % 10000) / 10000.0; }
-
 namespace SimPLEX {
-    void Initialize();
-    void Terminate();
-    void PrintSimPLEXHeader();
-    time_t start_time; // I don't like my namespace holding state...
-}
-
-void SimPLEX::Initialize() {
-	start_time = time(NULL);
-	PrintSimPLEXHeader();
-	options.ReadOptions();
-}
-
-// these ought to be constants, then print eg title, authors, emails, disclaimer
-void SimPLEX::PrintSimPLEXHeader() {
-	std::cout << std::endl << "SimPLEX" << std::endl
-			<< "by Stephen T. Pollard" << std::endl
-			<< "stephen.pollard@ucdenver.edu" << std::endl
-			<< "For internal use only." << std::endl
-			<< std::endl;
+    void Terminate(time_t start_time);
 }
 
 // the time stuff ought to be a separate file
-void SimPLEX::Terminate() {
+void SimPLEX::Terminate(time_t start_time) {
 	time_t time_taken = time(NULL) - start_time;
 	int h = time_taken / 3600;
 	int m = (time_taken % 3600) / 60;

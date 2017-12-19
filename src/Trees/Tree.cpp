@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream> // For ostringstream
 #include <cmath> // for floor and pow
-#include "Options.h"
+#include "../Options.h"
 
 extern double Random();
 extern Options options;
