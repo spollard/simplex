@@ -1,16 +1,16 @@
 #ifndef SubstitutionModelTypes_h_
 #define SubstitutionModelTypes_h_
 
-#include "SubstitutionModels/SubstitutionModel.h"
+#include "SubstitutionModel.h"
 
-#include "SubstitutionModels/Types/SingleProbabilityModel.h"
-#include "SubstitutionModels/Types/SingleSubstitutionRateModel.h"
-#include "SubstitutionModels/Types/ProbabilityMatrixModel.h"
-#include "SubstitutionModels/Types/SubstitutionRateMatrixModel.h"
-#include "SubstitutionModels/Types/RadiusDependentModel.h"
-#include "SubstitutionModels/Types/SubstitutionMixtureModel.h"
+#include "Types/SingleProbabilityModel.h"
+#include "Types/SingleSubstitutionRateModel.h"
+#include "Types/ProbabilityMatrixModel.h"
+#include "Types/SubstitutionRateMatrixModel.h"
+#include "Types/RadiusDependentModel.h"
+#include "Types/SubstitutionMixtureModel.h"
 
-#include "Options.h"
+#include "../Options.h"
 extern Options options;
 
 /**

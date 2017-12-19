@@ -3,7 +3,7 @@
 #include <cstdlib> // For exit
 #include <iostream>
 #include <cmath> // For floor
-#include "SubstitutionModelTypes.h"
+#include "../SubstitutionModelTypes.h"
 
 #include "Options.h"
 

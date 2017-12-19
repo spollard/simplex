@@ -14,11 +14,23 @@
 #include "Model.h"
 #include "Data.h"
 #include "MCMC.h"
+#include "utils.h"
 
+#ifdef _WIN32
+#include <sys/time.h>
+#else
+#include <sys/times.h>
+#endif
+
+//Globals
 Options options;
+double Random() { return (std::rand() % 10000) / 10000.0; };
 
 int main() {
-	SimPLEX::Initialize();
+	time_t start_time = time(NULL);
+
+	utils::printHeader();
+	options.ReadOptions();
 
 	Data data;
 	data.Initialize();
@@ -33,7 +45,7 @@ int main() {
 
 	// Now that I have objects allocated on the heap, this is required. Unless I use shared pointers...
 	model.Terminate();
-	SimPLEX::Terminate();
+	SimPLEX::Terminate(start_time);
 
 	return 0;
 }

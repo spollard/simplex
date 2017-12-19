@@ -2,7 +2,7 @@
 #define TreeTypes_h_
 
 #include "Tree.h"
-#include "Tree_B1.h"
+#include "Types/Tree_B1.h"
 
 #include "Options.h"
 extern Options options;
