@@ -99,7 +99,7 @@ void SubstitutionMixtureModel::InitializeSubstitutionModels(int number_of_sites,
 
 void SubstitutionMixtureModel::InitializeMixtureModelOut() {
 	string substitution_model_out_file = "substitution_mixture_model";
-	options.PrependOutputDirectory(substitution_model_out_file);
+	options.findFullFilePath(substitution_model_out_file);
 	substitution_model_out = new std::ofstream(
 			substitution_model_out_file.c_str());
 

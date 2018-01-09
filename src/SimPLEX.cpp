@@ -24,8 +24,12 @@
 
 //Globals
 Options options;
-double Random() { return (std::rand() % 10000) / 10000.0; };
 
+double Random() {
+	return (std::rand() % 10000) / 10000.0;
+}
+
+//Entry point for SimPLEX.
 int main() {
 	time_t start_time = time(NULL);
 
@@ -45,7 +49,7 @@ int main() {
 
 	// Now that I have objects allocated on the heap, this is required. Unless I use shared pointers...
 	model.Terminate();
-	SimPLEX::Terminate(start_time);
+	utils::Terminate(start_time);
 
 	return 0;
 }

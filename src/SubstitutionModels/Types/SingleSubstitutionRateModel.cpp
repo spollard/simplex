@@ -28,7 +28,7 @@ SingleSubstitutionRateModel* SingleSubstitutionRateModel::Clone() {
 void SingleSubstitutionRateModel::InitializeOutputStream() {
 	std::string substitution_model_out_file = "single_substitution_rate_model_"
 			+ IdToString();
-	options.PrependOutputDirectory(substitution_model_out_file);
+	options.findFullFilePath(substitution_model_out_file);
 	substitution_model_out = new std::ofstream(
 			substitution_model_out_file.c_str());
 	*substitution_model_out << "Substitution_Rate" << std::endl;

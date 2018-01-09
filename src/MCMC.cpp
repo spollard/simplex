@@ -6,9 +6,9 @@
 #include "Options.h"
 #include "Model.h"
 
-extern double Random();
 std::ofstream MCMC::lnlout;
 
+extern double Random();
 
 /// Public Functions ///
 

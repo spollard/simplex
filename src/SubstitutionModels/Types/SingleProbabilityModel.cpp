@@ -71,7 +71,7 @@ void SingleProbabilityModel::InitializeStateFromFile(
 void SingleProbabilityModel::InitializeOutputStream() {
 	std::string substitution_model_out_file = "single_probability_model_"
 			+ IdToString();
-	options.PrependOutputDirectory(substitution_model_out_file);
+	options.findFullFilePath(substitution_model_out_file);
 	substitution_model_out = new std::ofstream(
 			substitution_model_out_file.c_str());
 	*substitution_model_out << "Substitution_Probability" << std::endl;

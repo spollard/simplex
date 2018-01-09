@@ -1,8 +1,8 @@
-#include "ProbabilityMatrixModel.h"
-
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+
+#include "ProbabilityMatrixModel.h"
 
 //#include algorithm
 

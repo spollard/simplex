@@ -1,8 +1,7 @@
-#include "SubstitutionModel.h"
-
 #include <iostream>
 
-#include "Options.h"
+#include "../Options.h"
+#include "SubstitutionModel.h"
 
 extern Options options;
 

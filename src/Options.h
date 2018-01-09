@@ -1,5 +1,3 @@
-
-
 #ifndef Options_h_
 #define Options_h_
 
@@ -13,8 +11,9 @@ using std::string;
 class Options {
 public:
 	Options();
+	void PrintOptions();
 	void ReadOptions();         // read in default and control files
-    	void PrependOutputDirectory(string &parameter);     // wtf?
+    	void findFullFilePath(string &parameter);  
 
 	string defaultfile;         // where to find default settings
 	string optionsfile;         // where to find optional control settings
@@ -50,7 +49,7 @@ private:
 	void SetOption(string option, string value);
 	//Might remove this function for lack of use
 	void WriteOptions(std::ofstream& osparam);
-	void UpdateOutputOptions();
+	void ConfigureOutputDirectoryNames();
 	void CopyFile(string source_filename, string destination_filename);
 	void debugint(bool debug, string blurb, int integer);
 	void InitializeRandomNumberGeneratorSeed();
