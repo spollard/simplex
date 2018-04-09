@@ -21,7 +21,7 @@ class Model {
 public:
 	Model();
 	Model(const Model& model);
-	Model& operator=(Model model);
+	Model& operator = (Model model);
 	~Model();
 
 	void Initialize(map<string, vector<int> > taxa_names_to_sequences,
@@ -35,20 +35,21 @@ public:
 
 	void Terminate();
 
-private:
-	static int num_models; // number_of_models;
 	int id;
+
+private:
+	static int num_models; // number_of_models; models in the sense of number of rate matrices.
 
 	//Must be a pointer to use polymorphism
 	Tree* tree;
 
 	//Must be a pointer to use polymorphism
-	SubstitutionModel* sub_model;
+	SubstitutionModel* substitution_model;
 
 	double CalculateLogLikelihoodOfSubtree(Tree& tree);
 	double CalculateLogLikelihoodOfChild(Tree& tree, Tree& child);
-	void InitSubModel(int number_of_sites,
-			vector<string> states);
+	void InitializeSubstitutionModel(int number_of_sites,
+					 vector<string> states);
 };
 
 #endif

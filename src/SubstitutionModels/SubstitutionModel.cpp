@@ -16,8 +16,7 @@ SubstitutionModel::~SubstitutionModel() {
 }
 
 void SubstitutionModel::Initialize() {
-//	std::cout << "Initializing Substitution Model" << std::endl;
-
+	// std::cout << "Initializing Substitution Model" << std::endl;
 	is_constant = options.constant_substitution_models.front();
 	// This allows recycling of the last value
 	if (options.constant_substitution_models.size() > 1) options.constant_substitution_models.pop();

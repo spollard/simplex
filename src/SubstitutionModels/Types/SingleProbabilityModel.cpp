@@ -12,6 +12,7 @@ extern double Random();
 int SingleProbabilityModel::number_of_single_probability_models = 0;
 
 SingleProbabilityModel::SingleProbabilityModel() {
+	std::cout << "In specific model." << std::endl;
 	id = number_of_single_probability_models;
 	number_of_single_probability_models++;
 
@@ -50,18 +51,14 @@ void SingleProbabilityModel::Initialize(int number_of_sites,
 	}
 }
 
-void SingleProbabilityModel::InitializeStateFromFile(
-		std::string state_in_file) {
+void SingleProbabilityModel::InitializeStateFromFile(std::string state_in_file) {
 	std::ifstream state_in(state_in_file.c_str());
 
 	std::string header;
 	state_in >> header;
 	if (header != "Substitution_Probability") {
-		std::cerr
-				<< "Check header on substitution probability model initialization file for model "
-				<< IdToString() << std::endl;
-		std::cerr << "The header should be \"Substitution_Probability\""
-				<< std::endl;
+		std::cerr << "Check header on substitution probability model initialization file for model " << IdToString() << std::endl;
+		std::cerr << "The header should be \"Substitution_Probability\"" << std::endl;
 		std::exit(-1);
 	}
 
@@ -100,12 +97,13 @@ void SingleProbabilityModel::SampleParameters() {
  *
  */
 void SingleProbabilityModel::RecordState() {
-	if (not is_constant)
-		*substitution_model_out << substitution_probability << std::endl;
+	if (not is_constant) {	 
+	//*substitution_model_out << substitution_probability << std::endl;
+	}
 }
 
-double SingleProbabilityModel::SubstitutionProbability(int ancestral_state,
-		int descendent_state, int site, double branch_length) {
+double SingleProbabilityModel::SubstitutionProbability(int ancestral_state, int descendent_state, int site, double branch_length) {
+
 	double probability = 0;
 
 	if (ancestral_state != descendent_state)

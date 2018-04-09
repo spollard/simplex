@@ -51,6 +51,8 @@ int main() {
 	model.Terminate();
 	utils::Terminate(start_time);
 
+	std::cout << "Successful end" << std::endl;
+
 	return 0;
 }
 

@@ -20,12 +20,15 @@ MCMC::MCMC() {
 	lnL = 0;
 } 
 // Init MCMC with model, gens, calculate lnL
-void MCMC::Init(Model* model) { std::cout << "Initializing MCMC" << std::endl;
+void MCMC::Init(Model* model) {
+	std::cout << "Initializing MCMC" << std::endl;
 	this->model = model; // associate the pointer with the MCMC
+	std::cout << "Model pointer initialized." << std::endl;
 	gens = options.gens;
-	lnL = model->CalcLnl(); // should be in Run()?
+	std::cout << "This far? " << std::endl;
+	lnL = model->CalcLnl();
+	std::cout << "Made it this far." << std::endl;
 	lnlout.open(options.lnlout.c_str());
-    // Print_Headers(); would be better if this were somewhere else consistent, maybe static vector
 	lnlout << "Generation\tLog_likelihood\tProposed_log_likelihood\tAccepted" << std::endl;
 }
 

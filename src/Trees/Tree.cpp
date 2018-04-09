@@ -59,7 +59,8 @@ Tree::~Tree() {
 }
 
 // Tree cloning
-Tree* Tree::Clone() {  //	std::cout << "cloning tree" << std::endl;
+Tree* Tree::Clone() {
+	// std::cout << "cloning tree" << std::endl;
 	return new Tree(*this);
 }
 
