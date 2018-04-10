@@ -9,6 +9,7 @@
 #include "Types/SubstitutionRateMatrixModel.h"
 #include "Types/RadiusDependentModel.h"
 #include "Types/SubstitutionMixtureModel.h"
+#include "Types/GeneralTimeReversible.h"
 
 #include "../Options.h"
 

@@ -25,9 +25,7 @@ void MCMC::Init(Model* model) {
 	this->model = model; // associate the pointer with the MCMC
 	std::cout << "Model pointer initialized." << std::endl;
 	gens = options.gens;
-	std::cout << "This far? " << std::endl;
 	lnL = model->CalcLnl();
-	std::cout << "Made it this far." << std::endl;
 	lnlout.open(options.lnlout.c_str());
 	lnlout << "Generation\tLog_likelihood\tProposed_log_likelihood\tAccepted" << std::endl;
 }

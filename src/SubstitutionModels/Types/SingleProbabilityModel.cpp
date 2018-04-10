@@ -19,12 +19,8 @@ SingleProbabilityModel::SingleProbabilityModel() {
 	substitution_probability = 0;
 }
 
-SingleProbabilityModel::SingleProbabilityModel(
-		const SingleProbabilityModel& single_probability_model) :
-		SubstitutionModel(single_probability_model) {
-
-	substitution_probability =
-			single_probability_model.substitution_probability;
+SingleProbabilityModel::SingleProbabilityModel(const SingleProbabilityModel& single_probability_model) : SubstitutionModel(single_probability_model) {
+	substitution_probability = single_probability_model.substitution_probability;
 }
 
 SingleProbabilityModel::~SingleProbabilityModel() {
