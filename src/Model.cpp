@@ -66,7 +66,7 @@ SubstitutionModel* Model::InitializeSubstitutionModel(int num_sites, vector<stri
 	 * This is in the substituionModelType.h, can we make this more explicit?
 	 */
 	std::cout << "Start initialize." << std::endl;
-	SubstitutionModel* substitution_model = GetNextSubstitutionModel(); // In SubstituionModelTypes.h
+	SubstitutionModel* substitution_model = GetSubstitutionModel(); // In SubstituionModelTypes.h
 	std::cout << "Pointer: " << substitution_model << std::endl;
 	substitution_model->RecordState();
 	substitution_model->Initialize(num_sites, states);
