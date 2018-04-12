@@ -20,19 +20,18 @@
 class Model {
 public:
 	Model();
-	Model(const Model& model);
-	Model& operator = (Model model); // The copy-assign operator.
-	~Model(); // Destructor.
-
+	~Model();
 	void Initialize(map<string, vector<int> > taxa_names_to_sequences, vector<string> states);
-	void SampleParameters();  // SampleParameters();
-	double CalcLnl(); // Calculate the log likelihood
+
+	void SampleParameters();
+	void accept();
+	void reject();
+
+	double CalcLnl();
 	void RecordState();
 	void Terminate();
-	int id;
 
 private:
-	static int num_models; // number_of_models; models in the sense of number of rate matrices.
 	Tree* tree; //Must be a pointer to use polymorphism
 	SubstitutionModel* substitution_model; //Must be a pointer to use polymorphism
 

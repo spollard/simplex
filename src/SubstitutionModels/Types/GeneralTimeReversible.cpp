@@ -6,14 +6,13 @@
 #include "Options.h"
 
 extern Options options;
-
 extern double Random();
 
 int GeneralTimeReversible::number_of_single_probability_models = 0;
 
 GeneralTimeReversible::GeneralTimeReversible() {
 	std::cout << "In specific model." << std::endl;
-	id = number_of_single_probability_models;
+	//id = number_of_single_probability_models;
 	number_of_single_probability_models++;
 
 	substitution_probability = 0;
@@ -41,7 +40,15 @@ void GeneralTimeReversible::Initialize(int number_of_sites, std::vector<std::str
 	/*
 	 * std::cout << "Initializing Single Probability Model" << std::endl;
 	 */
+	//Hamish	
 	std::cout << "Initializing General Time Reversible Model (GTR)." << std::endl;
+
+	parameters.add_parameter(new ContinuousFloat("a", 0.5, 0.1));
+	parameters.add_parameter(new ContinuousFloat("b", 0.5, 0.1));
+	parameters.Initialize();
+	parameters.print();
+
+	//Stephen.
 	SubstitutionModel::Initialize(); // sets is_constant
 
 	InitializeState(); // Can call InitializeStateFromFile()
@@ -76,15 +83,6 @@ void GeneralTimeReversible::InitializeOutputStream() {
 	*substitution_model_out << "Substitution_Probability" << std::endl;
 }
 
-void GeneralTimeReversible::SampleParameters() {
-	/*
-	 * std::cout << "Sampling single probability model parameters" << std::endl;
-	 */
-	if (not is_constant) {
-		substitution_probability = Random();
-	}
-}
-
 void GeneralTimeReversible::RecordState() {
 	if (not is_constant) {	 
 		//*substitution_model_out << substitution_probability << std::endl;
@@ -92,13 +90,25 @@ void GeneralTimeReversible::RecordState() {
 }
 
 double GeneralTimeReversible::SubstitutionProbability(int ancestral_state, int descendent_state, int site, double branch_length) {
+	/*
+	 * Gives the likelihood of a particular sustitution.
+	 */
+	//std::cout << "Calculating probability " << ancestral_state << " " << descendent_state << " pos " << site << " branch length" << std::endl;
 
 	double probability = 0;
+	double rate; 
 
-	if (ancestral_state != descendent_state)
-		probability = substitution_probability;
-	else
-		probability = 1 - substitution_probability;
+	if(ancestral_state < 10) { 
+		rate = parameters.get("a");
+	} else {
+		rate = parameters.get("b");
+	}
+	
+	if(ancestral_state != descendent_state) {
+		probability = rate;
+	} else {
+		probability = 1.0 - rate;
+	}
 
 	return probability;
 }

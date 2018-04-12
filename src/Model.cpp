@@ -15,41 +15,13 @@ extern Options options;
 
 using namespace std;
 
-int Model::num_models = 0;
 
 Model::Model() {
 	/*
 	 * The default contructor.
 	 */
-	id = num_models;
-	num_models++;
 	tree = NULL;
 	SubstitutionModel* substitution_model = NULL;
-}
-
-Model::Model(const Model& model) {
-	/*
-	 *  A constructor that duplicates another model.
-	 *  We should try to use this function usually, due to the expensive cost of duplicating
-	 *  whole data structures.
-	 */
-	id = num_models;
-	num_models++;
-
-	tree = model.tree->Clone();
-	substitution_model = model.substitution_model->Clone();
-}
-
-//Copy-swap
-Model& Model::operator=(Model model) {
-	/*
-	 * The copy-swap assignment operator.
-	 */
-	std::swap(id, model.id);
-	std::swap(tree, model.tree);
-	std::swap(substitution_model, model.substitution_model);
-
-	return (*this);
 }
 
 Model::~Model() {
@@ -94,6 +66,14 @@ void Model::SampleParameters() {
 	 */
 	tree->SampleParameters();
 	substitution_model->SampleParameters();
+}
+
+void Model::accept() {
+	substitution_model->accept();
+}
+
+void Model::reject() {
+	substitution_model->reject();
 }
 
 void Model::RecordState() {

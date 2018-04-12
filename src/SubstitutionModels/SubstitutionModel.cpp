@@ -27,13 +27,6 @@ static const int initialize_by_sampling = 0;
 static const int initialize_from_file = 1;
 static const int initialize_by_asking_for_file = 2;
 
-/**
- * I like that this is a unified interface. Since it is unified, it should
- * take as much information as required by the most complex model I have.
- * That means passing in number_of_sites, residue_to_integer, and
- * integer_to_residue.
- *
- */
 void SubstitutionModel::InitializeState() {
 	std::cout << "Initializing model " << IdToString();
 	int initialization_type =
@@ -70,8 +63,27 @@ void SubstitutionModel::InitializeState() {
 	}
 }
 
-//These are purely virtual for now.
-//void SubstitutionModel::SampleParameters() {}
+void SubstitutionModel::SampleParameters() {
+	/*
+	 * Samples a single parameter within the parameter set();
+	 */
+	parameters.sample();
+}
+
+void SubstitutionModel::accept() {
+	/*
+	 * Accepts the newly sampled parameter set.
+	 */
+	parameters.accept();
+}
+
+void SubstitutionModel::reject() {
+	/*
+	 * Rejects the newly sampled parameter set, and undoes the changes from the previous sampling.
+	 */
+	parameters.reject();
+}
+
 //void SubstitutionModel::RecordState() {}
 
 void SubstitutionModel::Terminate() {

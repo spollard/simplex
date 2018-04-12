@@ -12,55 +12,63 @@ extern double Random();
 
 /// Public Functions ///
 
-// default constructor
 MCMC::MCMC() {
-	model = 0; // should be  model = NULL; ?
+	/*
+	 * Default constructor.
+	 */
+	model = 0;
 	gen = 0;
 	gens = 0;
 	lnL = 0;
 } 
-// Init MCMC with model, gens, calculate lnL
+
 void MCMC::Init(Model* model) {
+	/*
+	 * Init MCMC with model, gens calculate lnL.
+	 */
+
 	std::cout << "Initializing MCMC" << std::endl;
 	this->model = model; // associate the pointer with the MCMC
 	std::cout << "Model pointer initialized." << std::endl;
 	gens = options.gens;
+
+	//Calculate initial likelihood.
 	lnL = model->CalcLnl();
+
+	//Initialize output file.
 	lnlout.open(options.lnlout.c_str());
 	lnlout << "Generation\tLog_likelihood\tProposed_log_likelihood\tAccepted" << std::endl;
 }
 
-// Run an initialized MCMC
-void MCMC::Run() {  std::cout << "Running MCMC" << std::endl;
-	for (gen = 1; gen <= gens; gen++) {
-		Model pmodel = ProposeModel(); // returns model, which is prop_mod; bad: newly constructed
-		newLnL = pmodel.CalcLnl();
+void MCMC::Run() {
+	/*
+	 * Run an initialized MCMC.
+	 */
 
-		accepted = TestAccept(newLnL);
+	std::cout << "Running MCMC" << std::endl;
+	for (gen = 1; gen <= gens; gen++) {
+		//std::cout << "proposed model." << std::endl;
+
+		model->SampleParameters();
+		newLnL = model->CalcLnl();
+
+		//std::cout << "Old likelihood: " << lnL << " New likelihood: " << newLnL << std::endl;
+
+		accepted = log(Random()) < (newLnL - lnL);
+		
 		RecordState();
 
-		if (accepted) {  // Danger Will Robinson!
-			*model = pmodel; // swap() would be better
+		if (accepted) { 
 			lnL = newLnL;
+			model->accept();
+		} else {
+			model->reject();
 		}
 	}
 }
 
 ///  Private Functions  ///
-
-// this should be fixed pmodel as parameter of mcmc
-Model MCMC::ProposeModel() {
-	Model pmodel(*model); // copy current to proposed
-	pmodel.SampleParameters(); // propose new parameters
-	return pmodel;
-}
-
-bool MCMC::TestAccept(double newLnL) {
-	return log(Random()) < (newLnL - lnL);
-}
-
 void MCMC::RecordState() {  // ought to use a function to return tab separated items with endl
-	lnlout << gen << "\t" << lnL << "\t"
-		<< newLnL << "\t" << accepted << std::endl;
+	lnlout << gen << "\t" << lnL << "\t" << newLnL << "\t" << accepted << std::endl;
 	model->RecordState(); // is this always getting lnlout?
 }
