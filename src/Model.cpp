@@ -40,8 +40,8 @@ SubstitutionModel* Model::InitializeSubstitutionModel(int num_sites, vector<stri
 	std::cout << "Start initialize." << std::endl;
 	SubstitutionModel* substitution_model = GetSubstitutionModel(); // In SubstituionModelTypes.h
 	std::cout << "Pointer: " << substitution_model << std::endl;
-	substitution_model->RecordState();
 	substitution_model->Initialize(num_sites, states);
+	substitution_model->RecordState();
 	std::cout << "Successfully initialized model. " << substitution_model << std::endl;
 	return(substitution_model);
 }
@@ -121,7 +121,6 @@ double Model::CalculateLogLikelihoodOfChild(Tree& tree, Tree& child) {
 	 */
 	double Lnl = 0.0;
 	for (int site = 0; site < tree.sequence.size(); site++) {
-		substitution_model->RecordState();
 		Lnl += log(substitution_model->SubstitutionProbability(tree.sequence.at(site), child.sequence.at(site), site, child.distance));
 	}  return Lnl;
 }

@@ -47,22 +47,19 @@ void MCMC::Run() {
 
 	std::cout << "Running MCMC" << std::endl;
 	for (gen = 1; gen <= gens; gen++) {
-		//std::cout << "proposed model." << std::endl;
-
 		model->SampleParameters();
 		newLnL = model->CalcLnl();
 
-		//std::cout << "Old likelihood: " << lnL << " New likelihood: " << newLnL << std::endl;
-
 		accepted = log(Random()) < (newLnL - lnL);
-		
-		RecordState();
-
 		if (accepted) { 
 			lnL = newLnL;
 			model->accept();
 		} else {
 			model->reject();
+		}
+		
+		if(gen % options.outfreq == 0) {
+			RecordState();
 		}
 	}
 }

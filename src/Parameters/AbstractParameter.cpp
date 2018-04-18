@@ -7,3 +7,4 @@ AbstractParameter::AbstractParameter(std::string parameter_name) {
 	fixedQ = true;
 }
 
+

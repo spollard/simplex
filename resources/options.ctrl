@@ -24,7 +24,7 @@ substitution_model_type		0
 constant_substitution_model	0
 substitution_model_initialization	0
 
-generations 1000
+generations 100000
 output_frequency 1000
 
 sequences_file	testing/5taxon.fasta

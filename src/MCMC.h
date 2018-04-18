@@ -14,7 +14,6 @@ class MCMC {
 		void Run();
 	private:
 		Model* model;
-		Model* pmodel;
 		int gen;
 		int gens;
 		double lnL;

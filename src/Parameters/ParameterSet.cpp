@@ -6,8 +6,12 @@ ParameterSet::ParameterSet() {
 	 */
 }
 
-void ParameterSet::Initialize() {
+void ParameterSet::Initialize(std::ofstream* &out_file_buffer) {
 	current_parameter = parameter_list.begin();
+	out_stream_buffer = out_file_buffer;
+
+	AddHeaderToFile();
+	RecordStateToFile();
 }
 
 void ParameterSet::add_parameter(AbstractParameter* param) {
@@ -29,7 +33,7 @@ void ParameterSet::sample() {
 	
 }
 
-void ParameterSet::stepToNextParameter() {
+inline void ParameterSet::stepToNextParameter() {
 	/*
 	 * Sets the current_parameter iterator to the next sample.
 	 */
@@ -61,11 +65,44 @@ void ParameterSet::print() {
 	}
 }
 
-double ParameterSet::get(const std::string& name) {
+double ParameterSet::get(const std::string &name) {
 	/*
 	 * Will retreive the value of a parameter from the parameter set.
 	 */
 	return name_to_address[name]->getValue();
+}
+
+void ParameterSet::AddHeaderToFile() {
+	/*
+	 * Adds the columns names to the output csv file.
+	 */
+	std::list<AbstractParameter*>::iterator iter = parameter_list.begin();
+	while(iter != parameter_list.end()) {
+		if(iter != parameter_list.begin()) {
+			*out_stream_buffer << ", ";
+
+		}
+		*out_stream_buffer << (*iter)->name;
+		++iter;
+	}
+	*out_stream_buffer << std::endl;
+}
+
+void ParameterSet::RecordStateToFile(){
+	/*
+	 * Saves the current parameter values to the output csv file, contained
+	 * in the out_stream_buffer.
+	 */
+	std::list<AbstractParameter*>::iterator iter = parameter_list.begin();
+	while(iter != parameter_list.end()) {
+		if(iter != parameter_list.begin()) {
+			*out_stream_buffer << ", ";
+
+		}
+		*out_stream_buffer << (*iter)->getValue();
+		++iter;
+	}
+	*out_stream_buffer << std::endl;
 }
 
 

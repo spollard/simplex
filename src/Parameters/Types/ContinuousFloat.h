@@ -2,6 +2,7 @@
 #define ContinuousFloat_h_
 
 #include <string>
+#include <iostream>
 
 #include "../AbstractParameter.h"
 
@@ -16,7 +17,6 @@ class ContinuousFloat : public AbstractParameter {
 	private:
 		double value;
 		double std_dev;
-
 		double previous_value;
 		
 };

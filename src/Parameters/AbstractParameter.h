@@ -14,9 +14,11 @@ class AbstractParameter {
 
 		virtual double getValue() = 0;
 
-		virtual void printValue() = 0 ;
+		virtual void printValue() = 0;
 	protected:
 		bool fixedQ; //Indicates whether the state of this parameter is fixed or still being trialed.
 };
+
+
 
 #endif
