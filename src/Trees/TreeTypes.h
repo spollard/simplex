@@ -1,10 +1,11 @@
 #ifndef TreeTypes_h_
 #define TreeTypes_h_
 
-#include "Tree.h"
+#include "Types/Tree.h"
 #include "Types/Tree_B1.h"
 
 #include "Options.h"
+
 extern Options options;
 
 /**

@@ -54,7 +54,9 @@ void Model::Initialize(map<string, vector<int> > taxa_names_to_sequences, vector
 	 * - the substitution model class - which contains all the rate matrices.
 	 */
 	tree = InstantiateTree();
+	std::cout << "Init tree." << std::endl;
 	tree->Initialize(taxa_names_to_sequences, states);
+	std::cout << "Init tree end." << std::endl;
 
 	int num_sites = taxa_names_to_sequences.begin()->second.size();
 	substitution_model = InitializeSubstitutionModel(num_sites, states);

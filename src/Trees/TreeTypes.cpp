@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Tree.h"
+#include "Types/Tree.h"
 #include "Types/Tree_B1.h"
 
 #include "Options.h"
@@ -11,8 +11,8 @@ static const int b1_tree_type = 1;
 
 Tree* InstantiateTree() {
 	Tree* tree = NULL;
-
-	// This is a good candidate for a switch or case construction
+	
+	std::cout << "INSTANTIATING THE TREE:" << std::endl;
 	if (options.tree_type == normal_tree_type) {
 		tree = new Tree();
 	} else if (options.tree_type == b1_tree_type) {

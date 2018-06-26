@@ -13,7 +13,7 @@
 
 #include <vector>
 
-#include "Trees/Tree.h"
+#include "Trees/Types/Tree.h"
 
 #include "SubstitutionModels/SubstitutionModel.h"
 

@@ -1,7 +1,7 @@
 #ifndef Tree_B1_h_
 #define Tree_B1_h_
 
-#include "../Tree.h"
+#include "Tree.h"
 
 using std::string;
 using std::map;

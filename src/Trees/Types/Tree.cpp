@@ -17,8 +17,9 @@ ofstream Tree::substitutions_out;
 ofstream Tree::sequences_out;
 ofstream Tree::tree_out;
 
-// Tree constructor // Is this considered doing work? Is this exception safe?
+// Tree constructor.
 Tree::Tree() {   
+	std::cout << "Creating default tree." << std::endl;
 	id = num_trees;  
 	num_trees++;
 	name = "Node_" + IdToString();
@@ -28,28 +29,15 @@ Tree::Tree() {
 
 // copy
 Tree::Tree(const Tree& tree) { id = num_trees; num_trees++;
-    name = tree.name;  is_constant = tree.is_constant; distance = tree.distance;
+    name = tree.name;
+    is_constant = tree.is_constant;
+    distance = tree.distance;
 
     sequence = tree.sequence; states = tree.states; // not in constructor
 	if (tree.IsSubtree()) {
 		left = tree.left->Clone();  left->up = this;
 		right = tree.right->Clone();  right->up = this;
 	} else { left = NULL;  right = NULL;  }
-}
-
-//Copy-swap
-Tree& Tree::operator=(Tree tree) {
-	std::swap(id, tree.id);
-	std::swap(is_constant, tree.is_constant);
-	std::swap(name, tree.name);
-	std::swap(distance, tree.distance);
-	std::swap(sequence, tree.sequence);
-	std::swap(left, tree.left);
-	std::swap(right, tree.right);
-	std::swap(up, tree.up);
-	std::swap(states, tree.states);
-
-	return *this;
 }
 
 // Tree destruction
@@ -65,8 +53,8 @@ Tree* Tree::Clone() {
 }
 
 // Tree Initialize using seqs and states
-void Tree::Initialize(map<string, vector<int> > taxa_names_to_sequences,
-		vector<string> states) {
+void Tree::Initialize(map<string, vector<int> > taxa_names_to_sequences, vector<string> states) {
+	std::cout << "INITIALIZING TREE." << std::endl;
 	this->states = states;
 	ReadFromTreeFile();
 	InitializeSequences(taxa_names_to_sequences);
