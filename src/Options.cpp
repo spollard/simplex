@@ -3,6 +3,8 @@
 #include <cstdlib> // For atoi()
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
+#include <typeinfo> //Just for testing.
 
 #ifdef _WIN32
 #include <dir.h> // For mkdir()
@@ -24,27 +26,17 @@ Options::Options() {
 	optionsfile = "resources/options.ctrl";
 
 	seed = 0;
+	total_options = 0;
 }
 
 void Options::PrintOptions() {
+
 	std::cout << std::endl << "Options:" << std::endl;
-	std::cout << "Default file: " << defaultfile << std::endl;
-	std::cout << "Options file: " << optionsfile << std::endl;
-	std::cout << "Output directory: " << outdir << std::endl;
-	std::cout << "Tree file: " << treefile << std::endl;
-	std::cout << "Sequence file: " << seqfile << std::endl;
-	std::cout << "Tree output file: " << treeout << std::endl;
-	std::cout << "Sequences output file: " << seqsout << std::endl;
-	std::cout << "Substitutions output file: " << subsout << std::endl;
-	std::cout << "Log Likelihoods output file: " << lnlout << std::endl;
-	std::cout << "Seed: " << seed << std::endl; 
-	std::cout << "Debug mode: " << debug << std::endl;
-	std::cout << "Constant trees: " << constant_tree << std::endl;
-	std::cout << "Number of mixture classes: " << mixture_classes << std::endl;
-	std::cout << "Number of generations: " << gens << std::endl;
-	std::cout << "Output frequency: " << outfreq << std::endl;
-	std::cout << "Maximum segment length: " << max_segment_length << std::endl;
-	std::cout << "Tree type: " << tree_type << std::endl;
+
+	for(std::map<std::string, int>::iterator it = option_to_index.begin(); it != option_to_index.end(); ++it) {
+		std::cout << it->first << " = " << option_values[it->second] << " " << std::endl;
+	}
+
 	std::cout << std::endl;
 }
 
@@ -62,14 +54,12 @@ void Options::ProcessOptions() {
 	this->CopyFile(optionsfile, outdir + optionsfile);
 	this->CopyFile(defaultfile, outdir + defaultfile);
 
-	if (substitution_model_types.size() > 1) { // Remove substitution model type read from default file
-		substitution_model_types.pop();  // this seems clunky
-	}  if (mixture_classes < 1) mixture_classes = 1;
+	debug = get_int("debug");
+	outdir = get("output_directory");
 }
 
 void Options::ReadControlFile(string control_file) {
-	std::cout << std::endl;
-	std::cout << "Reading options from " << control_file << std::endl;
+	std::cout << std::endl << "Reading options from " << control_file << std::endl;
 
 	std::ifstream controlfile_stream(control_file.c_str());
 	if (not controlfile_stream.good()) {
@@ -88,72 +78,47 @@ void Options::ReadControlFile(string control_file) {
 			iss >> key;
 			if(key != "#") {
 				iss >> value;
+				std::cout << "Key: " << key << " Value: " << value << std::endl;
 				SetOption(key, value);
 			}
 		}
 	}
 }
 
-// there is no check if options are of right type
 void Options::SetOption(string option, string value) {
-	if (option == "debug") debug = atoi(value.c_str());
-	else if (option == "seed") seed = atoi(value.c_str());
-	else if (option == "tree_file") treefile = value;
-	else if (option == "sequences_file") seqfile = value;
-	else if (option == "tree_out_file") treeout = value;
-	else if (option == "substitutions_out_file") subsout = value;
-	else if (option == "sequences_out_file") seqsout = value;
-	else if (option == "likelihood_out_file") lnlout = value;
-	else if (option == "output_frequency") outfreq = atoi(value.c_str());
-	else if (option == "generations") gens = atoi(value.c_str());
-	else if (option == "constant_tree") constant_tree = atoi(value.c_str());
-	else if (option == "tree_type") tree_type = atoi(value.c_str());
-	else if (option == "max_segment_length") max_segment_length = atof(value.c_str());
-	else if (option == "substitution_model_type") substitution_model_types.push(atoi(value.c_str()));
-	else if (option == "constant_substitution_model") constant_substitution_models.push(atoi(value.c_str()));
-	else if (option == "substitution_model_initialization") substitution_models_initialization_type.push(atoi(value.c_str()));
-	else if (option == "substitution_model_initialization_file") substitution_models_initialization_files.push(value);
-	else if (option == "mixture_classes") mixture_classes = atoi(value.c_str());
-	else if (option == "output_directory") outdir = value;
-	else { //STP: Unrecognized option is a non-fatal error so simply print warning
-		std::cerr << "Unrecognized option found in control file:" << std::endl;
-		std::cerr << "\"" << option << "\" with a value \"" << value << "\"" << std::endl;
+	std::cout << "Saving: " << option << " " << value << " " << total_options << std::endl;
+	if(option_to_index.find(option) == option_to_index.end()) {
+		//Option does not already exist in options_to_index.
+		option_to_index[option] = total_options;
+		option_values[total_options] = value;
+		total_options++;
+	} else {
+		//Option does already exist.
+		int i = option_to_index[option];
+		option_values[i] = value;
 	}
 }
 
-// Might remove this function because it is never called
-// but it should be
-void Options::WriteOptions(std::ofstream& out_stream) {
-	/* Modified 2013-4-1 STP
-	 * Using setw(20) cannot handle longer arguments well. In particular, the
-	 * output files are long strings and are being cut at 20 characters.
-	 * I changed setw to using \t instead
-	 */
-	out_stream << "Using options specified by control file:" << std::endl;
-	out_stream << std::endl << "# debug and loudness controls #" << std::endl;
-	out_stream << "\tdebug\t\t\t" << debug << std::endl;
-	out_stream << "\tseed\t\t\t" << seed << std::endl;
+void Options::check_option_exists(std::string option) {
+	if(option_to_index.find(option) == option_to_index.end()) {
+		std::cerr << "Error: Option \"" << option << "\" not set." << std::endl;
+		exit(EXIT_FAILURE);
+	}
+}
 
-	out_stream << std::endl << "# control generations, frequency of sampling #"
-			<< std::endl;
-	out_stream << "\tgenerations\t\t\t" << gens << std::endl;
+std::string Options::get(std::string option) {
+	check_option_exists(option);
 
-	out_stream << std::endl
-			<< "# options for simulation to get proposal step in MCMC #"
-			<< std::endl;
+	int i = option_to_index[option];
+	return option_values[i];
+}
 
-	out_stream << std::endl << "# probablity calculation method #" << std::endl;
+int Options::get_int(std::string option) {
+	return atoi(get(option).c_str());
+}
 
-	out_stream << std::endl << "# optional input file names #" << std::endl;
-	out_stream << "\ttreefile\t\t\t" << treefile << std::endl;
-	out_stream << "\tseqfile\t\t\t" << seqfile << std::endl;
-
-	out_stream << std::endl << "# optional output file names #" << std::endl;
-	out_stream << "\ttreeoutfile\t\t\t" << treeout << std::endl; // Validated
-	out_stream << "\tsuboutfile\t\t\t" << subsout << std::endl; // Validated
-	out_stream << "\tseqoutfile\t\t\t" << seqsout << std::endl;
-	out_stream << "\tlikelihoodoutfile\t\t\t" << lnlout
-			<< std::endl;
+float Options::get_float(std::string option) {
+	return atof(get(option).c_str());
 }
 
 void Options::ConfigureOutputDirectoryNames() {
@@ -213,13 +178,13 @@ void Options::ConfigureOutputDirectoryNames() {
 	 * OR of S_IROTH, S_IWOTH, and S_IXOTH.*/
 #endif
 
-	findFullFilePath(treeout);
-	findFullFilePath(subsout);
-	findFullFilePath(lnlout);
-	findFullFilePath(seqsout);
+	treeout = findFullFilePath(get("tree_out_file"));
+	subsout = findFullFilePath(get("substitutions_out_file"));
+	lnlout = findFullFilePath(get("likelihood_out_file"));
+	seqsout = findFullFilePath(get("sequences_out_file"));
 }
 
-void Options::findFullFilePath(std::string &parameter) {
+inline string Options::findFullFilePath(std::string parameter) {
 	/*
 	 * Prepends the output directory path to the output file names, giving the full path name
 	 * for the given file.
@@ -227,17 +192,15 @@ void Options::findFullFilePath(std::string &parameter) {
 
 	if (parameter == "") std::cerr << "Cannot prepend output directory to empty parameter" << std::endl;
 	parameter = outdir + parameter;
-}
-
-void Options::debugint(bool debug, string blurb, int integer) {
-    if (debug) std::cout << blurb << integer << std::endl;
+	return parameter;
 }
 
 void Options::InitializeRandomNumberGeneratorSeed() {
     string blurb = "Seed not specified so set to ";
-    if (seed == 0) { // If seed not specified, set from clock
+    if (option_to_index.find("seed") != option_to_index.end()) {
+	    seed = get_int("seed");
+    } else {
 	    seed = time(0) ; 
-	    debugint(debug,blurb,seed);
     }
     srand(seed);
 }

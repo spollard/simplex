@@ -7,8 +7,6 @@ debug 			0
 # 1 	Single substitution rate 
 
 substitution_model_type		0
-constant_substitution_model	0
-substitution_model_initialization	0
 
 # Mixture model types
 # 0	Single substitution model

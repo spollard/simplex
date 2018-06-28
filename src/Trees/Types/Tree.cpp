@@ -23,7 +23,8 @@ Tree::Tree() {
 	id = num_trees;  
 	num_trees++;
 	name = "Node_" + IdToString();
-	is_constant = false;  distance = 0;
+	is_constant = false;
+	distance = 0;
 	left = NULL; right = NULL; up = NULL;
 }
 
@@ -63,10 +64,11 @@ void Tree::Initialize(map<string, vector<int> > taxa_names_to_sequences, vector<
 }
 
 void Tree::ReadFromTreeFile() {
-	ifstream tree_in(options.treefile.c_str());
+	string treefile = options.get("tree_file");
+	ifstream tree_in(treefile.c_str());
 
 	if (not tree_in.good()) {
-		cout << "Could not read tree file " << options.treefile << endl;
+		cout << "Could not read tree file " << treefile << endl;
 		exit(-1);
 	}
 
@@ -85,7 +87,7 @@ void Tree::ReadFromTreeFile() {
 void Tree::ReadFromString(string tree_string) {
 
 	// STP: Why is the constancy of the tree determined here?
-	is_constant = options.constant_tree;
+	is_constant = options.get_int("constant_tree");
 	
 	ExtractDistance(tree_string);
 	ExtractName(tree_string);

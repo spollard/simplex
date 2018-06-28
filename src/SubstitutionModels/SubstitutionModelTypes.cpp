@@ -17,14 +17,7 @@ SubstitutionModel* GetSubstitutionModel() {
 	 */
 
 	SubstitutionModel* substitution_model = NULL;
-
-	if (options.substitution_model_types.size() == 0) {
-		std::cerr << "Not enough substitution models types given." << std::endl;
-		exit(-1);
-	}
-
-	int next_model_type = options.substitution_model_types.front();
-	options.substitution_model_types.pop();
+	int next_model_type = options.get_int("substitution_model_type");
 
 	if (next_model_type == general_time_reversible_model_type) {
 		substitution_model = new GeneralTimeReversible();
@@ -32,5 +25,6 @@ SubstitutionModel* GetSubstitutionModel() {
 		std::cerr << "Substitution model type not recognized in get next sub model " << next_model_type << std::endl;
 		std::exit(-1);
 	}
+
 	return substitution_model;
 }

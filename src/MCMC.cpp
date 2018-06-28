@@ -30,7 +30,8 @@ void MCMC::Init(Model* model) {
 	std::cout << "Initializing MCMC" << std::endl;
 	this->model = model; // associate the pointer with the MCMC
 	std::cout << "Model pointer initialized." << std::endl;
-	gens = options.gens;
+	gens = options.get_int("generations");
+	std::cout << "Gens: " << gens << std::endl;
 
 	//Calculate initial likelihood.
 	lnL = model->CalcLnl();
@@ -45,6 +46,8 @@ void MCMC::Run() {
 	 * Run an initialized MCMC.
 	 */
 
+	int outfreq = options.get_int("output_frequency");
+
 	std::cout << "Running MCMC" << std::endl;
 	for (gen = 1; gen <= gens; gen++) {
 		model->SampleParameters();
@@ -58,7 +61,7 @@ void MCMC::Run() {
 			model->reject();
 		}
 		
-		if(gen % options.outfreq == 0) {
+		if(gen % outfreq == 0) {
 			RecordState();
 		}
 	}

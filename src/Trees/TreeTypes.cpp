@@ -11,16 +11,17 @@ static const int b1_tree_type = 1;
 
 Tree* InstantiateTree() {
 	Tree* tree = NULL;
+	int chosen_tree_type = options.get_int("tree_type");
 	
 	std::cout << "INSTANTIATING THE TREE:" << std::endl;
-	if (options.tree_type == normal_tree_type) {
+	if (chosen_tree_type == normal_tree_type) {
 		tree = new Tree();
-	} else if (options.tree_type == b1_tree_type) {
+	} else if (chosen_tree_type == b1_tree_type) {
 		tree = new Tree_B1();
 	} else {
 		std::cerr
 				<< "Tree type not recognized "
-				<< options.tree_type << std::endl;
+				<< chosen_tree_type << std::endl;
 		std::exit(-1);
 	}
 	return tree;
