@@ -1,5 +1,5 @@
-#ifndef Options_h_
-#define Options_h_
+#ifndef Environment_h_
+#define Environment_h_
 
 #include <fstream>
 #include <string>
@@ -9,9 +9,9 @@
 
 using std::string;
 
-class Options {
+class Environment {
 public:
-	Options();
+	Environment();
 	void PrintOptions();
 	void ReadOptions();         // read in default and control files
     	inline string findFullFilePath(string parameter);  

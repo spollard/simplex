@@ -1,4 +1,4 @@
-#include "Options.h"
+#include "Environment.h"
 
 #include <cstdlib> // For atoi()
 #include <iostream>
@@ -15,7 +15,7 @@
 #include <sys/times.h> // For time()
 #endif
 
-Options::Options() {
+Environment::Environment() {
 	/*
 	 *  Initialize options class.
 	 *  Sets a few minor defaults states, however the majority of the default states are 
@@ -30,7 +30,7 @@ Options::Options() {
 }
 
 // Initialize options.
-void Options::ReadOptions() {
+void Environment::ReadOptions() {
 	ReadControlFile(defaultfile);
 	ReadControlFile(optionsfile);
 	ProcessOptions();
@@ -38,7 +38,7 @@ void Options::ReadOptions() {
 }
 
 // Read control files.
-void Options::ReadControlFile(string control_file) {
+void Environment::ReadControlFile(string control_file) {
 	std::cout << std::endl << "Reading options from " << control_file << std::endl;
 
 	std::ifstream controlfile_stream(control_file.c_str());
@@ -64,7 +64,7 @@ void Options::ReadControlFile(string control_file) {
 	}
 }
 
-void Options::SetOption(string option, string value) {
+void Environment::SetOption(string option, string value) {
 	if(option_to_index.find(option) == option_to_index.end()) {
 		//Option does not already exist in options_to_index.
 		option_to_index[option] = total_options;
@@ -78,7 +78,7 @@ void Options::SetOption(string option, string value) {
 }
 
 // Process options.
-void Options::ProcessOptions() {
+void Environment::ProcessOptions() {
 	debug = get_int("debug");
 	outdir = get("output_directory");
 
@@ -95,7 +95,7 @@ void Options::ProcessOptions() {
 
 }
 
-void Options::InitializeRandomNumberGeneratorSeed() {
+void Environment::InitializeRandomNumberGeneratorSeed() {
     if (option_to_index.find("seed") != option_to_index.end()) {
 	    seed = get_int("seed");
     } else {
@@ -104,14 +104,14 @@ void Options::InitializeRandomNumberGeneratorSeed() {
     srand(seed);
 }
 
-void Options::CopyFile(string sourcefile, string newfile) {
+void Environment::CopyFile(string sourcefile, string newfile) {
 	std::ifstream source(sourcefile.c_str());
 	std::ofstream destination(newfile.c_str());
 	destination << source.rdbuf();
 }
 
 // Print options.
-void Options::PrintOptions() {
+void Environment::PrintOptions() {
 
 	std::cout << std::endl << "Options:" << std::endl;
 
@@ -123,30 +123,30 @@ void Options::PrintOptions() {
 }
 
 // Retreiving options.
-void Options::check_option_exists(std::string option) {
+void Environment::check_option_exists(std::string option) {
 	if(option_to_index.find(option) == option_to_index.end()) {
 		std::cerr << "Error: Option \"" << option << "\" not set." << std::endl;
 		exit(EXIT_FAILURE);
 	}
 }
 
-std::string Options::get(std::string option) {
+std::string Environment::get(std::string option) {
 	check_option_exists(option);
 
 	int i = option_to_index[option];
 	return option_values[i];
 }
 
-int Options::get_int(std::string option) {
+int Environment::get_int(std::string option) {
 	return atoi(get(option).c_str());
 }
 
-float Options::get_float(std::string option) {
+float Environment::get_float(std::string option) {
 	return atof(get(option).c_str());
 }
 
 // Configuring the output directory.
-void Options::ConfigureOutputDirectory() {
+void Environment::ConfigureOutputDirectory() {
 	/*
 	 * Configures the output directory and the file names of the output files.
 	 * Creates the output directory and changes the file names of the output file to
@@ -192,7 +192,7 @@ void Options::ConfigureOutputDirectory() {
 #endif
 }
 
-inline string Options::findFullFilePath(std::string parameter) {
+inline string Environment::findFullFilePath(std::string parameter) {
 	/*
 	 * Prepends the output directory path to the output file names, giving the full path name
 	 * for the given file.

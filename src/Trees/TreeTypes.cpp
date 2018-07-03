@@ -3,15 +3,15 @@
 #include "Types/Tree.h"
 #include "Types/Tree_B1.h"
 
-#include "Options.h"
-extern Options options;
+#include "Environment.h"
+extern Environment env;
 
 static const int normal_tree_type = 0;
 static const int b1_tree_type = 1;
 
 Tree* InstantiateTree() {
 	Tree* tree = NULL;
-	int chosen_tree_type = options.get_int("tree_type");
+	int chosen_tree_type = env.get_int("tree_type");
 	
 	std::cout << "INSTANTIATING THE TREE:" << std::endl;
 	if (chosen_tree_type == normal_tree_type) {

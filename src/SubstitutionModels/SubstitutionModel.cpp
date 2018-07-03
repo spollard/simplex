@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "../Options.h"
+#include "../Environment.h"
 #include "SubstitutionModel.h"
 
-extern Options options;
+extern Environment env;
 
 SubstitutionModel::SubstitutionModel() {
 	substitution_model_out = 0;
@@ -42,7 +42,7 @@ void SubstitutionModel::Terminate() {
 }
 
 std::ofstream* SubstitutionModel::CreateOutputStream(std::string file_name) {
-	file_name = options.findFullFilePath(file_name);
+	file_name = env.findFullFilePath(file_name);
 	return(new std::ofstream(file_name.c_str()));
 }
 

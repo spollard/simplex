@@ -3,11 +3,11 @@
 #include <iostream>
 #include <sstream> // For ostringstream
 #include <cmath> // for floor and pow
-#include "../Options.h"
+#include "../Environment.h"
 #include "../utils.h"
 
 extern double Random();
-extern Options options;
+extern Environment env;
 using namespace std;
 
 int Tree::num_trees = 0;
@@ -64,7 +64,7 @@ void Tree::Initialize(map<string, vector<int> > taxa_names_to_sequences, vector<
 }
 
 void Tree::ReadFromTreeFile() {
-	string treefile = options.get("tree_file");
+	string treefile = env.get("tree_file");
 	ifstream tree_in(treefile.c_str());
 
 	if (not tree_in.good()) {
@@ -87,7 +87,7 @@ void Tree::ReadFromTreeFile() {
 void Tree::ReadFromString(string tree_string) {
 
 	// STP: Why is the constancy of the tree determined here?
-	is_constant = options.get_int("constant_tree");
+	is_constant = env.get_int("constant_tree");
 	
 	ExtractDistance(tree_string);
 	ExtractName(tree_string);
@@ -192,9 +192,9 @@ void Tree::InitializeSequences(
 }
 
 void Tree::InitializeOutputStreams() {
-	tree_out.open(options.treeout.c_str());
-	sequences_out.open(options.seqsout.c_str());
-	substitutions_out.open(options.subsout.c_str());
+	tree_out.open(env.treeout.c_str());
+	sequences_out.open(env.seqsout.c_str());
+	substitutions_out.open(env.subsout.c_str());
 
 	substitutions_out << "Branch\tSubstitutions" << endl;
 }

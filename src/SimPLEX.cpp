@@ -10,7 +10,7 @@
  */
 
 #include "SimPLEX.h"
-#include "Options.h"
+#include "Environment.h"
 #include "Model.h"
 #include "Data.h"
 #include "MCMC.h"
@@ -23,7 +23,7 @@
 #endif
 
 //Globals
-Options options;
+Environment env;
 
 double Random() {
 	return (std::rand() % 10000) / 10000.0;
@@ -34,7 +34,7 @@ int main() {
 	time_t start_time = time(NULL);
 
 	utils::printHeader();
-	options.ReadOptions();
+	env.ReadOptions();
 
 	Data data;
 	data.Initialize();

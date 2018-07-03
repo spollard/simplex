@@ -7,9 +7,9 @@
 #include "SubstitutionModels/SubstitutionModelTypes.h"
 #include "SubstitutionModels/SubstitutionModel.h"
 
-#include "Options.h"
+#include "Environment.h"
 
-extern Options options;
+extern Environment env;
 
 /*  The tree needs the names_to_sequence map. The substitution model might need the empirical frequencies. */
 

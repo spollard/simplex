@@ -1,9 +1,9 @@
 #include "utils.h"
 #include <iostream>
 #include <stdlib.h>
-#include "Options.h"
+#include "Environment.h"
 
-extern Options options;
+extern Environment env;
 
 void utils::printHeader() {
 	std::cout << std::endl << "SimPLEX" << std::endl
@@ -25,10 +25,10 @@ void utils::Terminate(time_t start_time) {
 
 	std::cout << "Time taken: " << result << std::endl;
 	std::string time_taken_file = "Time_taken";
-	time_taken_file = options.findFullFilePath(time_taken_file);
+	time_taken_file = env.findFullFilePath(time_taken_file);
 	std::ofstream time_out(time_taken_file.c_str());
 	time_out << result << std::endl;
 
-	std::cout << std::endl << "Output placed in " << options.outdir << std::endl;
+	std::cout << std::endl << "Output placed in " << env.outdir << std::endl;
 }
 

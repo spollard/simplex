@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <map>
 
-#include "Options.h"
+#include "Environment.h"
 
-extern Options options;
+extern Environment env;
 
 static const int gap_indicator = -1;
 
@@ -37,8 +37,8 @@ string Data::cleanLine(string line) {
 
 /// This function is too long.
 void Data::ReadSequences() {
-	// This is the only dependency on options.
-	ifstream sequences_in(options.get("sequences_file").c_str());
+	// This is the only dependency on env.
+	ifstream sequences_in(env.get("sequences_file").c_str());
 
 	if (not sequences_in.good()) {
 		cerr << "Cannot read sequence file" << endl;
@@ -125,7 +125,7 @@ void Data::DetermineColumnsWithoutGaps() {
 }
 
 void Data::RemoveColumnsWithGapsFromSequences() {
-	if (options.debug)
+	if (env.debug)
 		cout << "Removing gaps" << endl;
 
 	for (std::map<string, vector<int> >::iterator it =

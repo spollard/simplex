@@ -3,9 +3,9 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "Options.h"
+#include "Environment.h"
 
-extern Options options;
+extern Environment env;
 
 GeneralTimeReversible::GeneralTimeReversible() {
 }
