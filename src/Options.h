@@ -14,7 +14,7 @@ public:
 	Options();
 	void PrintOptions();
 	void ReadOptions();         // read in default and control files
-    	string findFullFilePath(string parameter);  
+    	inline string findFullFilePath(string parameter);  
 
 	string defaultfile;         // where to find default settings
 	string optionsfile;         // where to find optional control settings
@@ -43,7 +43,7 @@ private:
 	void ReadControlFile(string controlfile);
 	void ProcessOptions();
 	void SetOption(string option, string value);
-	void ConfigureOutputDirectoryNames();
+	void ConfigureOutputDirectory();
 	void CopyFile(string source_filename, string destination_filename);
 	void InitializeRandomNumberGeneratorSeed();
 };

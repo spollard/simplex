@@ -25,7 +25,7 @@ void utils::Terminate(time_t start_time) {
 
 	std::cout << "Time taken: " << result << std::endl;
 	std::string time_taken_file = "Time_taken";
-	options.findFullFilePath(time_taken_file); // ?
+	time_taken_file = options.findFullFilePath(time_taken_file);
 	std::ofstream time_out(time_taken_file.c_str());
 	time_out << result << std::endl;
 

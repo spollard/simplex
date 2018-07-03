@@ -29,17 +29,7 @@ Options::Options() {
 	total_options = 0;
 }
 
-void Options::PrintOptions() {
-
-	std::cout << std::endl << "Options:" << std::endl;
-
-	for(std::map<std::string, int>::iterator it = option_to_index.begin(); it != option_to_index.end(); ++it) {
-		std::cout << it->first << " = " << option_values[it->second] << " " << std::endl;
-	}
-
-	std::cout << std::endl;
-}
-
+// Initialize options.
 void Options::ReadOptions() {
 	ReadControlFile(defaultfile);
 	ReadControlFile(optionsfile);
@@ -47,17 +37,7 @@ void Options::ReadOptions() {
 	PrintOptions();
 }
 
-void Options::ProcessOptions() {
-	InitializeRandomNumberGeneratorSeed(); // InitRandom(seed);
-	ConfigureOutputDirectoryNames();                  // meaning what?
-
-	this->CopyFile(optionsfile, outdir + optionsfile);
-	this->CopyFile(defaultfile, outdir + defaultfile);
-
-	debug = get_int("debug");
-	outdir = get("output_directory");
-}
-
+// Read control files.
 void Options::ReadControlFile(string control_file) {
 	std::cout << std::endl << "Reading options from " << control_file << std::endl;
 
@@ -78,7 +58,6 @@ void Options::ReadControlFile(string control_file) {
 			iss >> key;
 			if(key != "#") {
 				iss >> value;
-				std::cout << "Key: " << key << " Value: " << value << std::endl;
 				SetOption(key, value);
 			}
 		}
@@ -86,7 +65,6 @@ void Options::ReadControlFile(string control_file) {
 }
 
 void Options::SetOption(string option, string value) {
-	std::cout << "Saving: " << option << " " << value << " " << total_options << std::endl;
 	if(option_to_index.find(option) == option_to_index.end()) {
 		//Option does not already exist in options_to_index.
 		option_to_index[option] = total_options;
@@ -99,6 +77,52 @@ void Options::SetOption(string option, string value) {
 	}
 }
 
+// Process options.
+void Options::ProcessOptions() {
+	debug = get_int("debug");
+	outdir = get("output_directory");
+
+	InitializeRandomNumberGeneratorSeed();
+	ConfigureOutputDirectory();
+
+	treeout = findFullFilePath(get("tree_out_file"));
+	subsout = findFullFilePath(get("substitutions_out_file"));
+	lnlout = findFullFilePath(get("likelihood_out_file"));
+	seqsout = findFullFilePath(get("sequences_out_file"));
+
+	CopyFile(optionsfile, outdir + optionsfile);
+	CopyFile(defaultfile, outdir + defaultfile);
+
+}
+
+void Options::InitializeRandomNumberGeneratorSeed() {
+    if (option_to_index.find("seed") != option_to_index.end()) {
+	    seed = get_int("seed");
+    } else {
+	    seed = time(0) ; 
+    }
+    srand(seed);
+}
+
+void Options::CopyFile(string sourcefile, string newfile) {
+	std::ifstream source(sourcefile.c_str());
+	std::ofstream destination(newfile.c_str());
+	destination << source.rdbuf();
+}
+
+// Print options.
+void Options::PrintOptions() {
+
+	std::cout << std::endl << "Options:" << std::endl;
+
+	for(std::map<std::string, int>::iterator it = option_to_index.begin(); it != option_to_index.end(); ++it) {
+		std::cout << it->first << " = " << option_values[it->second] << " " << std::endl;
+	}
+
+	std::cout << std::endl;
+}
+
+// Retreiving options.
 void Options::check_option_exists(std::string option) {
 	if(option_to_index.find(option) == option_to_index.end()) {
 		std::cerr << "Error: Option \"" << option << "\" not set." << std::endl;
@@ -121,7 +145,8 @@ float Options::get_float(std::string option) {
 	return atof(get(option).c_str());
 }
 
-void Options::ConfigureOutputDirectoryNames() {
+// Configuring the output directory.
+void Options::ConfigureOutputDirectory() {
 	/*
 	 * Configures the output directory and the file names of the output files.
 	 * Creates the output directory and changes the file names of the output file to
@@ -129,16 +154,7 @@ void Options::ConfigureOutputDirectoryNames() {
 	 *
 	 * For example: "seq.out" -> "/output_dir/seq.out"
 	 */
-
-	if (outdir == "") {
-		time_t rawtime = time(NULL); // initializes rawtime
-		struct tm * timeinfo = localtime(&rawtime); // transforms it into a local tm struct
-
-		char dir[100];
-		strftime(dir, 100, "%Y-%m-%d_%H%M%S/", timeinfo);
-		outdir = std::string(dir);
-	}
-
+	
 	char lastchar = outdir.at(outdir.length() - 1);
 
 	if (debug) std::cout << "The last char in " << outdir << " is " << lastchar << std::endl;
@@ -153,8 +169,7 @@ void Options::ConfigureOutputDirectoryNames() {
 	// TODO: double check this works on windows for directory that already exists
 #ifdef _WIN32
 	if (mkdir(outdir.c_str())) {
-		std::cout << "Could not make output directory " << output_directory
-				<< std::endl;
+		std::cout << "Could not make output directory " << output_directory << std::endl;
 	} else {
 		std::cout << "Making directory successful" << std::endl;
 	}
@@ -162,10 +177,8 @@ void Options::ConfigureOutputDirectoryNames() {
 	struct stat st;
 	if (stat(outdir.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
 		if (not debug) {
-			std::cout << "output dir " << outdir
-			<< " exists. Overwrite? (Y/n)" << std::endl;
-			if (getchar() != 'Y')
-			exit(1);
+			std::cout << "output dir " << outdir << " exists. Overwrite? (Y/n)" << std::endl;
+			if (getchar() != 'Y') exit(1);
 		}
 	} else {
 		mkdir(outdir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
@@ -177,11 +190,6 @@ void Options::ConfigureOutputDirectoryNames() {
 	 * execute permission for users other than the file owner. S_IRWXO is the bitwise inclusive
 	 * OR of S_IROTH, S_IWOTH, and S_IXOTH.*/
 #endif
-
-	treeout = findFullFilePath(get("tree_out_file"));
-	subsout = findFullFilePath(get("substitutions_out_file"));
-	lnlout = findFullFilePath(get("likelihood_out_file"));
-	seqsout = findFullFilePath(get("sequences_out_file"));
 }
 
 inline string Options::findFullFilePath(std::string parameter) {
@@ -193,20 +201,4 @@ inline string Options::findFullFilePath(std::string parameter) {
 	if (parameter == "") std::cerr << "Cannot prepend output directory to empty parameter" << std::endl;
 	parameter = outdir + parameter;
 	return parameter;
-}
-
-void Options::InitializeRandomNumberGeneratorSeed() {
-    string blurb = "Seed not specified so set to ";
-    if (option_to_index.find("seed") != option_to_index.end()) {
-	    seed = get_int("seed");
-    } else {
-	    seed = time(0) ; 
-    }
-    srand(seed);
-}
-
-void Options::CopyFile(string sourcefile, string newfile) {
-	std::ifstream source(sourcefile.c_str());
-	std::ofstream destination(newfile.c_str());
-	destination << source.rdbuf();
 }
