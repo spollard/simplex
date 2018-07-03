@@ -5,8 +5,6 @@
 #include "Environment.h"
 #include "Model.h"
 
-extern Environment env; // why is this here, exactly
-
 class MCMC {
 	public:
 		MCMC();

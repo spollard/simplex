@@ -3,12 +3,12 @@
 #include <fstream>
 #include <cmath>
 #include <limits>
-#include "Environment.h"
 #include "Model.h"
 
 std::ofstream MCMC::lnlout;
 
 extern double Random();
+extern Environment env;
 
 /// Public Functions ///
 
