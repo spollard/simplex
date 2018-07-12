@@ -17,42 +17,31 @@
 
 Environment::Environment() {
 	/*
-	 *  Initialize options class.
+	 *  Initialize environment class.
 	 *  Sets a few minor defaults states, however the majority of the default states are 
 	 *  read from default.ctrl.
 	 */
-
-	defaultfile = "resources/defaults.ctrl";
-	optionsfile = "resources/options.ctrl";
 
 	seed = 0;
 	total_options = 0;
 }
 
 // Initialize options.
-void Environment::ReadOptions() {
-	ReadControlFile(defaultfile);
-	ReadControlFile(optionsfile);
+void Environment::ReadOptions(std::ifstream &default_file_stream, std::ifstream &options_file_stream) {
+	ReadControlFile(default_file_stream);
+	ReadControlFile(options_file_stream);
 	ProcessOptions();
 	PrintOptions();
 }
 
 // Read control files.
-void Environment::ReadControlFile(string control_file) {
-	std::cout << std::endl << "Reading options from " << control_file << std::endl;
-
-	std::ifstream controlfile_stream(control_file.c_str());
-	if (not controlfile_stream.good()) {
-		std::cerr << "Cannot read control file \"" << control_file << "\"" << std::endl;
-		exit(-1);
-	}
-
+void Environment::ReadControlFile(std::ifstream &file_stream) {
 	std::string key = "";
 	std::string value = "";
 
 	std::string line;
 
-	while(std::getline(controlfile_stream, line)) {
+	while(std::getline(file_stream, line)) {
 		if(line != "") {
 			std::istringstream iss(line);
 			iss >> key;
@@ -89,10 +78,6 @@ void Environment::ProcessOptions() {
 	subsout = findFullFilePath(get("substitutions_out_file"));
 	lnlout = findFullFilePath(get("likelihood_out_file"));
 	seqsout = findFullFilePath(get("sequences_out_file"));
-
-	CopyFile(optionsfile, outdir + optionsfile);
-	CopyFile(defaultfile, outdir + defaultfile);
-
 }
 
 void Environment::InitializeRandomNumberGeneratorSeed() {
@@ -102,12 +87,6 @@ void Environment::InitializeRandomNumberGeneratorSeed() {
 	    seed = time(0) ; 
     }
     srand(seed);
-}
-
-void Environment::CopyFile(string sourcefile, string newfile) {
-	std::ifstream source(sourcefile.c_str());
-	std::ofstream destination(newfile.c_str());
-	destination << source.rdbuf();
 }
 
 // Print options.

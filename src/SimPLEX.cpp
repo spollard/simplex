@@ -11,6 +11,7 @@
 
 #include "SimPLEX.h"
 #include "Environment.h"
+#include "IO.h"
 #include "Model.h"
 #include "Data.h"
 #include "MCMC.h"
@@ -24,6 +25,7 @@
 
 //Globals
 Environment env;
+IO::Files files;
 
 double Random() {
 	return (std::rand() % 10000) / 10000.0;
@@ -34,8 +36,13 @@ int main() {
 	time_t start_time = time(NULL);
 
 	utils::printHeader();
-	env.ReadOptions();
 
+	//Establish environment.
+	std::ifstream default_file_stream = files.read_file("default");
+	std::ifstream options_file_stream = files.read_file("options");
+	env.ReadOptions(default_file_stream, options_file_stream);
+
+	// Initiating program.
 	Data data;
 	data.Initialize();
 
@@ -50,6 +57,8 @@ int main() {
 	// Now that I have objects allocated on the heap, this is required. Unless I use shared pointers...
 	model.Terminate();
 	utils::Terminate(start_time);
+
+	files.close();
 
 	std::cout << "Successful end" << std::endl;
 

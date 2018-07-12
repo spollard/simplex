@@ -6,18 +6,14 @@
 #include <queue>
 #include <map>
 
-
 using std::string;
 
 class Environment {
 public:
 	Environment();
 	void PrintOptions();
-	void ReadOptions();         // read in default and control files
+	void ReadOptions(std::ifstream &default_file_stream, std::ifstream &options_file_stream);         // read in default and control files
     	inline string findFullFilePath(string parameter);  
-
-	string defaultfile;         // where to find default settings
-	string optionsfile;         // where to find optional control settings
 
 	int seed;                   // random number generator seed
     	bool debug;                 // turns debugging on or off
@@ -40,11 +36,10 @@ public:
 	float get_float(std::string);
 
 private:
-	void ReadControlFile(string controlfile);
+	void ReadControlFile(std::ifstream &file_stream);
 	void ProcessOptions();
 	void SetOption(string option, string value);
 	void ConfigureOutputDirectory();
-	void CopyFile(string source_filename, string destination_filename);
 	void InitializeRandomNumberGeneratorSeed();
 };
 
