@@ -13,16 +13,12 @@ public:
 	Environment();
 	void PrintOptions();
 	void ReadOptions(std::ifstream &default_file_stream, std::ifstream &options_file_stream);         // read in default and control files
-    	inline string findFullFilePath(string parameter);  
+    	//inline string findFullFilePath(string parameter);  
 
 	int seed;                   // random number generator seed
     	bool debug;                 // turns debugging on or off
 
 	string outdir;              // directory for output files
-	string treeout;             // name of file to output trees
-	string seqsout;             // name of file to output sequences
-	string subsout;             // name of file to output substitutions
-	string lnlout;              // name of file to output likelihoods
 
 	// Storing option values.
 	int total_options;
@@ -39,7 +35,6 @@ private:
 	void ReadControlFile(std::ifstream &file_stream);
 	void ProcessOptions();
 	void SetOption(string option, string value);
-	void ConfigureOutputDirectory();
 	void InitializeRandomNumberGeneratorSeed();
 };
 

@@ -3,11 +3,13 @@
 #include <iostream>
 #include <sstream> // For ostringstream
 #include <cmath> // for floor and pow
-#include "../Environment.h"
-#include "../utils.h"
+#include "Environment.h"
+#include "IO.h"
+#include "utils.h"
 
 extern double Random();
 extern Environment env;
+extern IO::Files files;
 using namespace std;
 
 int Tree::num_trees = 0;
@@ -192,9 +194,12 @@ void Tree::InitializeSequences(
 }
 
 void Tree::InitializeOutputStreams() {
-	tree_out.open(env.treeout.c_str());
-	sequences_out.open(env.seqsout.c_str());
-	substitutions_out.open(env.subsout.c_str());
+	files.add_file("tree", env.get("tree_out_file"), IOtype::OUTPUT);
+	tree_out = files.get_ofstream("tree");
+	files.add_file("sequences", env.get("sequences_out_file"), IOtype::OUTPUT);
+	sequences_out = files.get_ofstream("sequences");
+	files.add_file("substitutions", env.get("substitutions_out_file"), IOtype::OUTPUT);
+	substitutions_out = files.get_ofstream("sequences");
 
 	substitutions_out << "Branch\tSubstitutions" << endl;
 }

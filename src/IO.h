@@ -17,12 +17,13 @@ struct fileInfo {
 };
 
 namespace IO {
-
 class Files {
 public:
 	Files();
+	void setupOutput();
 	void add_file(std::string name, std::string path, IOtype);
-	std::ifstream read_file(std::string name);
+	std::ifstream get_ifstream(std::string name);
+	std::ofstream get_ofstream(std::string name);
 	void print();
 	void close();
 
@@ -33,13 +34,14 @@ private:
 
 	std::string defaultfile;
 	std::string optionsfile;
+	std::string outdir;
 
 	void check_stream(const std::string&, std::ifstream&);
 	std::string filename_from_path(std::string);
 	void copyFile(const std::string&, const std::string&);
 	inline std::string findFullFilePath(std::string parameter);  
+	void ConfigureOutputDirectory();
 };
-
 }
 
 #endif

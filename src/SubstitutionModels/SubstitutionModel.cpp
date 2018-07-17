@@ -1,9 +1,11 @@
 #include <iostream>
 
-#include "../Environment.h"
+#include "Environment.h"
+#include "IO.h"
 #include "SubstitutionModel.h"
 
 extern Environment env;
+extern IO::Files files;
 
 SubstitutionModel::SubstitutionModel() {
 	substitution_model_out = 0;
@@ -41,8 +43,9 @@ void SubstitutionModel::Terminate() {
 	delete substitution_model_out;
 }
 
-std::ofstream* SubstitutionModel::CreateOutputStream(std::string file_name) {
-	file_name = env.findFullFilePath(file_name);
-	return(new std::ofstream(file_name.c_str()));
-}
+//std::ofstream SubstitutionModel::CreateOutputStream(std::string file_name) {
+//	files.add_file("substitution_model", file_name, IOtype::OUTPUT);
+//	std::ofstream stream = files.out_file("substitution_model");
+//	return(stream);
+//}
 

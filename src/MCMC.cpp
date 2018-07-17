@@ -3,12 +3,15 @@
 #include <fstream>
 #include <cmath>
 #include <limits>
+
 #include "Model.h"
+#include "IO.h"
 
 std::ofstream MCMC::lnlout;
 
 extern double Random();
 extern Environment env;
+extern IO::Files files;
 
 /// Public Functions ///
 
@@ -37,7 +40,8 @@ void MCMC::Init(Model* model) {
 	lnL = model->CalcLnl();
 
 	//Initialize output file.
-	lnlout.open(env.lnlout.c_str());
+	files.add_file("likelihoods", env.get("likelihood_out_file"), IOtype::OUTPUT);
+	lnlout = files.get_ofstream("likelihoods");
 	lnlout << "Generation\tLog_likelihood\tProposed_log_likelihood\tAccepted" << std::endl;
 }
 

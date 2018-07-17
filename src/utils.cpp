@@ -2,8 +2,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Environment.h"
+#include "IO.h"
 
 extern Environment env;
+extern IO::Files files;
 
 void utils::printHeader() {
 	std::cout << std::endl << "SimPLEX" << std::endl
@@ -25,10 +27,11 @@ void utils::Terminate(time_t start_time) {
 
 	std::cout << "Time taken: " << result << std::endl;
 	std::string time_taken_file = "Time_taken";
-	time_taken_file = env.findFullFilePath(time_taken_file);
-	std::ofstream time_out(time_taken_file.c_str());
+
+	files.add_file("time", env.get("time_out_file"), IOtype::OUTPUT);
+	std::ofstream time_out = files.get_ofstream("time");
 	time_out << result << std::endl;
 
-	std::cout << std::endl << "Output placed in " << env.outdir << std::endl;
+	std::cout << std::endl << "Output placed in " << env.get("output_directory") << std::endl;
 }
 

@@ -72,12 +72,7 @@ void Environment::ProcessOptions() {
 	outdir = get("output_directory");
 
 	InitializeRandomNumberGeneratorSeed();
-	ConfigureOutputDirectory();
-
-	treeout = findFullFilePath(get("tree_out_file"));
-	subsout = findFullFilePath(get("substitutions_out_file"));
-	lnlout = findFullFilePath(get("likelihood_out_file"));
-	seqsout = findFullFilePath(get("sequences_out_file"));
+	//ConfigureOutputDirectory();
 }
 
 void Environment::InitializeRandomNumberGeneratorSeed() {
@@ -122,62 +117,4 @@ int Environment::get_int(std::string option) {
 
 float Environment::get_float(std::string option) {
 	return atof(get(option).c_str());
-}
-
-// Configuring the output directory.
-void Environment::ConfigureOutputDirectory() {
-	/*
-	 * Configures the output directory and the file names of the output files.
-	 * Creates the output directory and changes the file names of the output file to
-	 * include to full path to the output directory.
-	 *
-	 * For example: "seq.out" -> "/output_dir/seq.out"
-	 */
-	
-	char lastchar = outdir.at(outdir.length() - 1);
-
-	if (debug) std::cout << "The last char in " << outdir << " is " << lastchar << std::endl;
-
-	if (lastchar != '/' && lastchar != '\\') {
-		if (debug) std::cout << "last char is not /" << std::endl;
-		outdir += '/';
-	}
-
-	// For Windows
-	// According to http://sourceforge.net/p/predef/wiki/OperatingSystems/
-	// TODO: double check this works on windows for directory that already exists
-#ifdef _WIN32
-	if (mkdir(outdir.c_str())) {
-		std::cout << "Could not make output directory " << output_directory << std::endl;
-	} else {
-		std::cout << "Making directory successful" << std::endl;
-	}
-#else	//ifdef __linux__ || __APPLE__
-	struct stat st;
-	if (stat(outdir.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
-		if (not debug) {
-			std::cout << "output dir " << outdir << " exists. Overwrite? (Y/n)" << std::endl;
-			if (getchar() != 'Y') exit(1);
-		}
-	} else {
-		mkdir(outdir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
-	}
-	/*Read, write, and search, or execute, for the file owner; S_IRWXU is the bitwise inclusive
-	 * OR of S_IRUSR, S_IWUSR, and S_IXUSR.
-	 * Read, write, and search or execute permission for the file's group. S_IRWXG is the
-	 * bitwise inclusive OR of S_IRGRP, S_IWGRP, and S_IXGRP. Read, write, and search or
-	 * execute permission for users other than the file owner. S_IRWXO is the bitwise inclusive
-	 * OR of S_IROTH, S_IWOTH, and S_IXOTH.*/
-#endif
-}
-
-inline string Environment::findFullFilePath(std::string parameter) {
-	/*
-	 * Prepends the output directory path to the output file names, giving the full path name
-	 * for the given file.
-	 */
-
-	if (parameter == "") std::cerr << "Cannot prepend output directory to empty parameter" << std::endl;
-	parameter = outdir + parameter;
-	return parameter;
 }
