@@ -37,7 +37,7 @@ int main() {
 
 	utils::printHeader();
 
-	//Establish environment.
+	//Establish environment and files.
 	std::ifstream default_file_stream = files.get_ifstream("default");
 	std::ifstream options_file_stream = files.get_ifstream("options");
 	env.ReadOptions(default_file_stream, options_file_stream);

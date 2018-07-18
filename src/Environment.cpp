@@ -30,7 +30,10 @@ Environment::Environment() {
 void Environment::ReadOptions(std::ifstream &default_file_stream, std::ifstream &options_file_stream) {
 	ReadControlFile(default_file_stream);
 	ReadControlFile(options_file_stream);
-	ProcessOptions();
+	
+	debug = get_int("debug");
+	InitializeRandomNumberGeneratorSeed();
+
 	PrintOptions();
 }
 
@@ -64,15 +67,6 @@ void Environment::SetOption(string option, string value) {
 		int i = option_to_index[option];
 		option_values[i] = value;
 	}
-}
-
-// Process options.
-void Environment::ProcessOptions() {
-	debug = get_int("debug");
-	outdir = get("output_directory");
-
-	InitializeRandomNumberGeneratorSeed();
-	//ConfigureOutputDirectory();
 }
 
 void Environment::InitializeRandomNumberGeneratorSeed() {
